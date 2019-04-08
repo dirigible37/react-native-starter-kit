@@ -1,62 +1,41 @@
-import React from 'react';
-import { StatusBar, Platform } from 'react-native';
+import React, { Component } from "react";
+import { View, StatusBar, Platform  } from "react-native";
+import { Container, Content, Picker, Button, Text } from "native-base";
+import Expo from "expo";
 import { Font } from 'expo';
-import PropTypes from 'prop-types';
-import { Provider } from 'react-redux';
-import { Router, Stack } from 'react-native-router-flux';
-import { PersistGate } from 'redux-persist/es/integration/react';
-
-import { Root, StyleProvider } from 'native-base';
-import getTheme from '../../native-base-theme/components';
-import theme from '../../native-base-theme/variables/commonColor';
-
-import Routes from './routes/index';
 import Loading from './components/Loading';
+import HomeScreen from "./components/HomeScreen.js";
+import { RootSwitchNav } from "./router.js";
+import {
+  createStackNavigator,
+  createAppContainer
+} from 'react-navigation';
 
-// Hide StatusBar on Android as it overlaps tabs
-if (Platform.OS === 'android') StatusBar.setHidden(true);
+StatusBar.setHidden(true);
 
-export default class App extends React.Component {
-  static propTypes = {
-    store: PropTypes.shape({}).isRequired,
-    persistor: PropTypes.shape({}).isRequired,
+export default class AwesomeApp extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isReady: false,
+      signedIn: false
+    };
   }
-
-  state = { loading: true }
-
   async componentWillMount() {
     await Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'),
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf'),
     });
-
-    this.setState({ loading: false });
+    this.setState({ isReady: true });
   }
 
   render() {
-    const { loading } = this.state;
-    const { store, persistor } = this.props;
+    if (!this.state.isReady) {
+      return <Loading />;
+    }
 
-    if (loading) return <Loading />;
-
-    return (
-      <Root>
-        <Provider store={store}>
-          <PersistGate
-            loading={<Loading />}
-            persistor={persistor}
-          >
-            <StyleProvider style={getTheme(theme)}>
-              <Router>
-                <Stack key="root">
-                  {Routes}
-                </Stack>
-              </Router>
-            </StyleProvider>
-          </PersistGate>
-        </Provider>
-      </Root>
-    );
+    const Layout = createAppContainer(RootSwitchNav);
+    return <Layout />;
   }
 }
