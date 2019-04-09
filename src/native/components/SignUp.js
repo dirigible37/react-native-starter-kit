@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Container, Content, Text, Form, Item, Label, Input, Button, Header,Title, List, ListItem, InputGroup, Icon, Picker
+  Container, View, Content, Text, Form, Item, Label, Input, Button, Header,Title, List, ListItem, InputGroup, Icon, Picker
 } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Loading from './Loading';
-import styles from '../styles/my_styles.js';
+import signup_style from '../styles/my_styles.js';
 
 class SignUp extends React.Component {
   static propTypes = {
@@ -29,26 +29,31 @@ class SignUp extends React.Component {
 
   render() {
     return (
-      <Container style={styles.container}>
+      <Container style={signup_style.body}>
         <Content>
           <List>
             <ListItem>
               <InputGroup>
               <Icon name="ios-person" style={{ color: '#0A69FE' }} />
-              <Input placeholder={"Email Address"}/>
+              <Input  
+                placeholder={"Email Address"} 
+                placeholderTextColor={"#d3d3d3"}/>
               </InputGroup>
             </ListItem>
             <ListItem>
               <InputGroup>
                 <Icon name="ios-unlock" style={{ color: '#0A69FE' }} />
-              <Input/>
+              <Input  
+                placeholder={"Password"} 
+                placeholderTextColor={"#d3d3d3"}
+                secureTextEntry={true}/>
               </InputGroup>
             </ListItem>
           </List>
-          <Button onPress={() => {this.props.navigation.navigate("SignedIn");}}>
+          <Button style={signup_style.primaryButton} onPress={() => {this.props.navigation.navigate("SignedIn");}}>
             <Text>Login</Text>
           </Button>
-          <Button>
+          <Button style={signup_style.primaryButton} >
             <Text>New Here?</Text>
           </Button>
 
