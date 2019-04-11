@@ -22,7 +22,7 @@ export default class AwesomeApp extends Component {
     };
   }
   async componentWillMount() {
-    await Font.loadAsync({
+    await Font.loadAsync({    
       Roboto: require('native-base/Fonts/Roboto.ttf'),
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf'),
