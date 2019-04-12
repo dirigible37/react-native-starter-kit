@@ -89,10 +89,10 @@ class SignUp extends React.Component {
             </ListItem>
           </List>
           <Button style={signup_style.primaryButton} onPress={() => {this.props.navigation.navigate("SignedIn");}}>
-            <Text>Login</Text>
+            <Text>Recipe List Demo</Text>
           </Button>
-          <Button style={signup_style.primaryButton} >
-            <Text>New Here?</Text>
+          <Button style={signup_style.primaryButton} onPress={() => {this.props.navigation.navigate("RecipeView");}}>
+            <Text>Recipe View Demo</Text>
           </Button>
 
         </Content>

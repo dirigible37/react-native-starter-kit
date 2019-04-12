@@ -7,6 +7,7 @@ import {
   } from "react-navigation";
 import HomeScreen from "./components/HomeScreen.js";
 import SignUp from "./components/SignUp.js";
+import RecipeScreen from "./components/RecipeScreen.js";
 
 export const DrawerNav = createDrawerNavigator(
     {
@@ -22,6 +23,9 @@ export const RootSwitchNav = createSwitchNavigator(
             },
             SignedOut: {
                 screen: SignUp
+            },
+            RecipeView: {
+                screen: RecipeScreen
             },
             Drawer: DrawerNav
         },

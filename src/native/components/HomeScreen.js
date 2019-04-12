@@ -120,8 +120,6 @@ export default class HomeScreen extends React.Component {
         </Fab>
         <Content>
           <List>
-
-            
             {
               list.map((l, i) => (
                 <ListItem thumbnail key={i}>
