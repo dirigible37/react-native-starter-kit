@@ -53,6 +53,43 @@ function SignUp(props) {
 }
 */
 
+const base_recipe = {
+  Id: 1,
+  Photo: "https://barefeetinthekitchen.com/wp-content/uploads/2014/11/bulgogi-4-1024x683.jpg",
+  Name: "Beef Bulgogi",
+  Description: "This shit is dope af",
+  Cook_Time: "50",
+  OwnerID: "userblahblahblah",
+  Last_Used: "20190410",
+  Ingredients: [{
+    Name: "Onion",
+    Quantity: {
+      Magnitude: "1",
+      Unit: "whole"
+    }
+  }, ],
+  Steps: [
+    {
+      step_text: "chop that shit chop that shit chop that shit chop that shit chop that shit chop that shit",
+      step_ingredients: [
+        "1 cup this",
+        "1 tablespoon that"
+      ],
+      Photo: "choppingitup.png", // optional
+      Duration: "10",
+    },
+    {
+      step_text: "cook that shit",
+      step_ingredients: [
+        "1 cup this",
+        "1 tablespoon that"
+      ],
+      Photo: "choppingitup.png", // optional
+      Duration: "10",
+    }
+  ]
+}
+
 class SignUp extends React.Component {
   constructor(props) {
     super(props);
@@ -70,6 +107,9 @@ class SignUp extends React.Component {
       <Container style={signup_style.body}>
         <Content>
           <List>
+            <ListItem>
+              <Text>Login development still in process</Text>
+            </ListItem>
             <ListItem>
               <InputGroup>
               <Icon name="ios-person" style={{ color: '#0A69FE' }} />
@@ -91,10 +131,6 @@ class SignUp extends React.Component {
           <Button style={signup_style.primaryButton} onPress={() => {this.props.navigation.navigate("SignedIn");}}>
             <Text>Recipe List Demo</Text>
           </Button>
-          <Button style={signup_style.primaryButton} onPress={() => {this.props.navigation.navigate("RecipeView");}}>
-            <Text>Recipe View Demo</Text>
-          </Button>
-
         </Content>
       </Container>
     );

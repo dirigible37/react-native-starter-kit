@@ -4,7 +4,7 @@ import { DrawerActions } from 'react-navigation-drawer';
 import { Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, List, ListItem, Fab, Thumbnail} from "native-base";
 
 
-
+/*
 const recipe = {
     Id: 1,
     Photo: "https://barefeetinthekitchen.com/wp-content/uploads/2014/11/bulgogi-4-1024x683.jpg",
@@ -41,17 +41,23 @@ const recipe = {
       }
     ]
   }
+*/
 
 export default class HomeScreen extends React.Component {
+
   render() {
+    const { navigation } = this.props;
+    //Gotta make a default "error" recipe in case no load
+    const recipe = navigation.getParam('recipe');
+
     return (
       <Container>
         <Header>
           <Left style={{flex:1}}>
             <Button
               transparent
-              onPress={() => {this.props.navigation.navigate("SignedIn");}}>
-              <Icon name="home" />
+              onPress={() => {navigation.navigate("SignedIn");}}>
+              <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body style={{ flex:1}}>

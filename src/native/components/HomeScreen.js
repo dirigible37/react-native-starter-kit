@@ -17,29 +17,25 @@ const list = [
     Ingredients: [{
       Name: "Onion",
       Quantity: {
-        Magnitude: "RealNumber",
-        Unit: "ounces"
+        Magnitude: "1",
+        Unit: "whole"
       }
     }, ],
     Steps: [
       {
-        step_text: "chop that shit",
+        step_text: "chop that shit chop that shit chop that shit chop that shit chop that shit chop that shit",
         step_ingredients: [
-          {
-            Quantity: "QuantityObj",
-            Name: "Onion"
-          },
+          "1 cup this",
+          "1 tablespoon that"
         ],
         Photo: "choppingitup.png", // optional
         Duration: "10",
       },
       {
-        step_text: "chop that shit",
+        step_text: "cook that shit",
         step_ingredients: [
-          {
-            Quantity: "QuantityObj",
-            Name: "Onion"
-          },
+          "1 cup this",
+          "1 tablespoon that"
         ],
         Photo: "choppingitup.png", // optional
         Duration: "10",
@@ -63,23 +59,19 @@ const list = [
     }, ],
     Steps: [
       {
-        step_text: "chop that shit",
+        step_text: "chop that shit chop that shit chop that shit chop that shit chop that shit chop that shit",
         step_ingredients: [
-          {
-            Quantity: "QuantityObj",
-            Name: "Onion"
-          },
+          "1 cup this",
+          "1 tablespoon that"
         ],
         Photo: "choppingitup.png", // optional
         Duration: "10",
       },
       {
-        step_text: "chop that shit",
+        step_text: "cook that shit",
         step_ingredients: [
-          {
-            Quantity: "QuantityObj",
-            Name: "Onion"
-          },
+          "1 cup this",
+          "1 tablespoon that"
         ],
         Photo: "choppingitup.png", // optional
         Duration: "10",
@@ -122,7 +114,7 @@ export default class HomeScreen extends React.Component {
           <List>
             {
               list.map((l, i) => (
-                <ListItem thumbnail key={i}>
+                <ListItem thumbnail key={i} button={true} onPress={() => {this.props.navigation.navigate("RecipeView", {recipe : list[i]} );}}>
                   <Left>
                     <Thumbnail square source={{ uri: l.Photo }} />
                   </Left>
