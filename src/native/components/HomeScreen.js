@@ -97,7 +97,8 @@ export default class HomeScreen extends React.Component {
           </Body>
           <Right>
             <Button
-              transparent>
+              transparent
+              onPress={() => {this.props.navigation.navigate("AddRecipe");}}>
               <Icon name="add" />
             </Button>
           </Right>

@@ -8,6 +8,7 @@ import {
 import HomeScreen from "./components/HomeScreen.js";
 import SignUp from "./components/SignUp.js";
 import RecipeScreen from "./components/RecipeScreen.js";
+import NewRecipe from "./components/NewRecipe.js";
 
 export const DrawerNav = createDrawerNavigator(
     {
@@ -26,6 +27,9 @@ export const RootSwitchNav = createSwitchNavigator(
             },
             RecipeView: {
                 screen: RecipeScreen
+            },
+            AddRecipe: {
+              screen: NewRecipe
             },
             Drawer: DrawerNav
         },
