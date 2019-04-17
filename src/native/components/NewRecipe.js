@@ -71,8 +71,8 @@ export default class NewRecipe extends React.Component {
         </Header>
         <Content>
           <Form onSubmit={this.handleSubmit}>
-          <Label style={{ paddingTop:10, paddingBottom:10}}>Recipe Name</Label>
-            <Item  regular key={0}>
+            <Label style={{ paddingTop:10, paddingBottom:10}}>Recipe Name</Label>
+            <Item  rounded key={0}>
               <Input
                 placeholder="Recipe Name"
                 placeholderTextColor={'#d3d3d3'}
@@ -82,9 +82,9 @@ export default class NewRecipe extends React.Component {
             </Item>
             <Label style={{ paddingTop:10, paddingBottom:10}}>Ingredients</Label>
             {this.state.ingredients.map((ingredients, idx) => (
-                <Item regular key={idx + 1} style={{ flex: 1, flexDirection:'row'}} >
+                <Item rounded key={idx + 1} style={{ flex: 1, flexDirection:'row'}} >
                     <Left style={{flex:1}}>
-                        <Text>{idx+1}</Text> 
+                        <Text style={{paddingLeft:10}}>{idx+1}</Text> 
                     </Left>
                     <Body  style={{flex:15, flexDirection:'row'}}>
                         <Input
@@ -103,14 +103,17 @@ export default class NewRecipe extends React.Component {
                             onChange={this.handleIngredientsNameChange(idx)}
                         />
                     </Body>
-                    <Right  style={{flex:3, paddingRight:5}}>
-                        <Button style={{height:"80%" }} onPress={this.handleRemoveIngredient(idx)}><Text>-</Text></Button>
-                    </Right>
+                    {idx+1 == this.state.ingredients.length ? (
+                        <Right  style={{flex:3, paddingRight:5}}>
+                            <Button transparent style={{height:"80%" }} onPress={this.handleAddIngredient}><Icon type="MaterialIcons" name="add"></Icon></Button>
+                        </Right>
+                    ) : (
+                        <Right  style={{flex:3, paddingRight:5}}>
+                            <Button transparent style={{height:"80%" }} onPress={this.handleRemoveIngredient(idx)}><Icon type="MaterialCommunityIcons" name="delete"></Icon></Button>
+                        </Right>
+                    )}
                 </Item>
             ))}
-            <Button onPress={this.handleAddIngredient}>
-              <Text>Add Ingredient</Text>
-            </Button>
             <Button>
               <Text>Submit</Text>
             </Button>
