@@ -1,22 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import {
-  Container,
-  Header,
-  Content,
-  Form,
-  Item,
-  Input,
-  Button,
-  Label,
-  Text,
-  Left,
-  Right,
-  Body,
-  Icon,
-  Title,
-} from 'native-base';
+import signup_style from '../styles/my_styles.js';
+import {Container, Header, Content, Form, Item, Input, Button, Label, Text, Left, Right, Body, Icon, Title, } from 'native-base';
 
 export default class NewRecipe extends React.Component {
   constructor() {
@@ -86,8 +71,8 @@ export default class NewRecipe extends React.Component {
         </Header>
         <Content>
           <Form onSubmit={this.handleSubmit}>
-            <Item stackedLabel key={0}>
-              <Label>Recipe Name</Label>
+          <Label style={{ paddingTop:10, paddingBottom:10}}>Recipe Name</Label>
+            <Item  regular key={0}>
               <Input
                 placeholder="Recipe Name"
                 placeholderTextColor={'#d3d3d3'}
@@ -95,24 +80,39 @@ export default class NewRecipe extends React.Component {
                 onChange={this.handleNameChange}
               />
             </Item>
+            <Label style={{ paddingTop:10, paddingBottom:10}}>Ingredients</Label>
             {this.state.ingredients.map((ingredients, idx) => (
-              <Item stackedLabel key={idx + 1}>
-                <Icon name={`share`}/>
-                <Input
-                  placeholder={`Ingredient #${idx + 1} name`}
-                  placeholderTextColor={'#d3d3d3'}
-                  value={ingredients.name}
+                <Item regular key={idx + 1} style={{ flex: 1, flexDirection:'row'}} >
+                    <Left style={{flex:1}}>
+                        <Text>{idx+1}</Text> 
+                    </Left>
+                    <Body  style={{flex:15, flexDirection:'row'}}>
+                        <Input
+                            style={{flex:3}}
+                            placeholder={`Ingredient #${idx + 1} name`}
+                            placeholderTextColor={'#d3d3d3'}
+                            value={ingredients.name}
+                            onChange={this.handleIngredientsNameChange(idx)}
+                        />
 
-                  onChange={this.handleIngredientsNameChange(idx)}
-                />
-
-              </Item>
+                        <Input
+                            style={{flex:1, borderLeftWidth: 1, borderLeftColor:"#e2e2e2"}}
+                            placeholder={`Quantity`}
+                            placeholderTextColor={'#d3d3d3'}
+                            value={ingredients.name}
+                            onChange={this.handleIngredientsNameChange(idx)}
+                        />
+                    </Body>
+                    <Right  style={{flex:3, paddingRight:5}}>
+                        <Button style={{height:"80%" }} onPress={this.handleRemoveIngredient(idx)}><Text>-</Text></Button>
+                    </Right>
+                </Item>
             ))}
             <Button onPress={this.handleAddIngredient}>
               <Text>Add Ingredient</Text>
             </Button>
             <Button>
-              <Text>Incorporate</Text>
+              <Text>Submit</Text>
             </Button>
           </Form>
         </Content>

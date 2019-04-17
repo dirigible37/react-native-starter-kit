@@ -21,4 +21,12 @@ module.exports = StyleSheet.create({
     backgroundColor:"blue",
     width:150
   },
+  circleText: {
+    width: 44,
+    height: 44,
+    borderRadius: 44/2,
+    backgroundColor:'blue',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
