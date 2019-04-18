@@ -3,14 +3,12 @@ import { StatusBar } from "react-native";
 import { DrawerActions } from 'react-navigation-drawer';
 import { Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, List, ListItem, Fab, Thumbnail} from "native-base";
 
-
-
-const list = [
+const recipe_list = [
   {
     Id: 1,
     Photo: "https://barefeetinthekitchen.com/wp-content/uploads/2014/11/bulgogi-4-1024x683.jpg",
     Name: "Beef Bulgogi",
-    Description: "This shit is dope af",
+    Description: "Some super good korean marinated beef!",
     Cook_Time: "50",
     OwnerID: "userblahblahblah",
     Last_Used: "20190410",
@@ -23,7 +21,7 @@ const list = [
     }, ],
     Steps: [
       {
-        step_text: "chop that shit chop that shit chop that shit chop that shit chop that shit chop that shit",
+        step_text: "Chop that stuff up! chop that stuff up! chop that stuff up! chop that stuff up! chop that stuff up! ",
         step_ingredients: [
           "1 cup this",
           "1 tablespoon that"
@@ -32,7 +30,7 @@ const list = [
         Duration: "10",
       },
       {
-        step_text: "cook that shit",
+        step_text: "Now cook it",
         step_ingredients: [
           "1 cup this",
           "1 tablespoon that"
@@ -46,7 +44,7 @@ const list = [
     Id: 2,
     Photo: "http://yfimq2at25v1pt2cj1ozsc4k.wpengine.netdna-cdn.com/wp-content/uploads/2017/03/Mac-N-Cheese-with-Honey-Bacon-670x405-1489186002.jpg",
     Name: "Mac n Cheese",
-    Description: "Dope ass mac n cheese recipe",
+    Description: "My awesome mac n cheese recipe",
     Cook_Time: "20",
     OwnerID: "userblahblahblah",
     Last_Used: "20190410",
@@ -59,7 +57,7 @@ const list = [
     }, ],
     Steps: [
       {
-        step_text: "chop that shit chop that shit chop that shit chop that shit chop that shit chop that shit",
+        step_text: "Cook up the noodles",
         step_ingredients: [
           "1 cup this",
           "1 tablespoon that"
@@ -68,7 +66,7 @@ const list = [
         Duration: "10",
       },
       {
-        step_text: "cook that shit",
+        step_text: "Mix some cheese in",
         step_ingredients: [
           "1 cup this",
           "1 tablespoon that"
@@ -81,7 +79,15 @@ const list = [
 ]
 
 export default class HomeScreen extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      list:recipe_list
+    };
+  }
+
   render() {
+    const { list } = this.state;
     return (
       <Container>
         <Header>

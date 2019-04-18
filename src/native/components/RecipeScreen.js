@@ -3,46 +3,6 @@ import { StatusBar, Image } from "react-native";
 import { DrawerActions } from 'react-navigation-drawer';
 import { Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, List, ListItem, Fab, Thumbnail} from "native-base";
 
-
-/*
-const recipe = {
-    Id: 1,
-    Photo: "https://barefeetinthekitchen.com/wp-content/uploads/2014/11/bulgogi-4-1024x683.jpg",
-    Name: "Beef Bulgogi",
-    Description: "This shit is dope af",
-    Cook_Time: "50",
-    OwnerID: "userblahblahblah",
-    Last_Used: "20190410",
-    Ingredients: [{
-      Name: "Onion",
-      Quantity: {
-        Magnitude: "1",
-        Unit: "whole"
-      }
-    }, ],
-    Steps: [
-      {
-        step_text: "chop that shit chop that shit chop that shit chop that shit chop that shit chop that shit",
-        step_ingredients: [
-          "1 cup this",
-          "1 tablespoon that"
-        ],
-        Photo: "choppingitup.png", // optional
-        Duration: "10",
-      },
-      {
-        step_text: "cook that shit",
-        step_ingredients: [
-          "1 cup this",
-          "1 tablespoon that"
-        ],
-        Photo: "choppingitup.png", // optional
-        Duration: "10",
-      }
-    ]
-  }
-*/
-
 export default class HomeScreen extends React.Component {
 
   render() {
@@ -69,6 +29,14 @@ export default class HomeScreen extends React.Component {
             </Button>
           </Right>
         </Header>
+        <Fab
+            active="true"
+            direction="up"
+            containerStyle={{ }}
+            style={{ backgroundColor: '#5067FF' }}
+            position="bottomRight">
+            <Icon type="FontAwesome" name="fire" />
+        </Fab>
         <Content>
           <Card>
             <CardItem cardBody>

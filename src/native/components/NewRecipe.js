@@ -30,8 +30,8 @@ export default class NewRecipe extends React.Component {
   };
 
   handleSubmit = evt => {
-    const { name, ingredients } = this.state;
-    alert(`Incorporated: ${name} with ${ingredients.length} ingredients`);
+    const { navigation } = this.props;
+    const mystuff = navigation.getParam('list')
   };
 
   handleAddIngredient = () => {
@@ -40,11 +40,25 @@ export default class NewRecipe extends React.Component {
     });
   };
 
+  handleAddStep = () => {
+    this.setState({
+        steps: [...this.state.steps, { instructions: '', ingredients: '', photo: '', duration: '' }],
+    });
+  };
+
   handleRemoveIngredient = idx => () => {
     this.setState({
       ingredients: this.state.ingredients.filter((s, sidx) => idx !== sidx),
     });
   };
+
+  handleRemoveStep = idx => () => {
+    this.setState({
+        steps: this.state.steps.filter((s, sidx) => idx !== sidx),
+    });
+  };
+
+
 
   render() {
     return (
@@ -71,8 +85,7 @@ export default class NewRecipe extends React.Component {
         </Header>
         <Content>
           <Form onSubmit={this.handleSubmit}>
-            <Label style={{ paddingTop:10, paddingBottom:10}}>Recipe Name</Label>
-            <Item  rounded key={0}>
+            <Item  style={{ marginTop:10,  marginLeft:10,  marginRight:10}} regular key={0}>
               <Input
                 placeholder="Recipe Name"
                 placeholderTextColor={'#d3d3d3'}
@@ -80,9 +93,31 @@ export default class NewRecipe extends React.Component {
                 onChange={this.handleNameChange}
               />
             </Item>
-            <Label style={{ paddingTop:10, paddingBottom:10}}>Ingredients</Label>
+            <Item  style={{ marginTop:10,  marginLeft:10,  marginRight:10}} regular key={1}>
+              <Input
+                placeholder="Description"
+                placeholderTextColor={'#d3d3d3'}
+                value={this.state.name}
+                onChange={this.handleNameChange}
+              />
+            </Item>
+            <Item  style={{ marginTop:10,  marginLeft:10,  marginRight:10, borderBottomWidth:0}} key={2}>
+                <Input
+                    style={{marginRight:20, borderColor:"#e2e2e2", borderWidth:1}}
+                    placeholder={`Prep Time`}
+                    placeholderTextColor={'#d3d3d3'}
+                />
+
+                <Input
+                    style={{borderColor:"#e2e2e2", borderWidth:1}}
+                    placeholder={`Cook Time`}
+                    placeholderTextColor={'#d3d3d3'}
+                />
+            </Item>
+
+            <Label style={{ paddingTop:10, paddingBottom:8}}>Ingredients</Label>
             {this.state.ingredients.map((ingredients, idx) => (
-                <Item rounded key={idx + 1} style={{ flex: 1, flexDirection:'row'}} >
+                <Item regular key={idx + 3} style={{ flex: 1, flexDirection:'row', marginTop:2,  marginLeft:10,  marginRight:10}} >
                     <Left style={{flex:1}}>
                         <Text style={{paddingLeft:10}}>{idx+1}</Text> 
                     </Left>
@@ -114,7 +149,36 @@ export default class NewRecipe extends React.Component {
                     )}
                 </Item>
             ))}
-            <Button>
+
+            <Label style={{ paddingTop:10, paddingBottom:8}}>Steps</Label>
+            {this.state.steps.map((steps, idx) => (
+                <Item regular key={idx + 3 + this.state.ingredients.length} style={{ flex: 1, flexDirection:'row', marginTop:2,  marginLeft:10,  marginRight:10}} >
+                    <Left style={{flex:1}}>
+                        <Text style={{paddingLeft:10}}>{idx+1}</Text> 
+                    </Left>
+                    <Body  style={{flex:15, flexDirection:'row'}}>
+                        <Input
+                            style={{flex:3}}
+                            placeholder={`Step #${idx + 1} instructions`}
+                            placeholderTextColor={'#d3d3d3'}
+                            value={steps.name}
+                            onChange={this.handleIngredientsNameChange(idx)}
+                        />
+                    </Body>
+                    {idx+1 == this.state.steps.length ? (
+                        <Right  style={{flex:3, paddingRight:5}}>
+                            <Button transparent style={{height:"80%" }} onPress={this.handleAddStep}><Icon type="MaterialIcons" name="add"></Icon></Button>
+                        </Right>
+                    ) : (
+                        <Right  style={{flex:3, paddingRight:5}}>
+                            <Button transparent style={{height:"80%" }} onPress={this.handleRemoveStep(idx)}><Icon type="MaterialCommunityIcons" name="delete"></Icon></Button>
+                        </Right>
+                    )}
+                </Item>
+            ))}
+
+
+            <Button style={{ marginTop:30}}>
               <Text>Submit</Text>
             </Button>
           </Form>
