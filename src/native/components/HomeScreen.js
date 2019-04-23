@@ -2,6 +2,8 @@ import React from "react";
 import { StatusBar } from "react-native";
 import { DrawerActions } from 'react-navigation-drawer';
 import { Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, List, ListItem, Fab, Thumbnail} from "native-base";
+import Loading from './Loading';
+import { Stitch, AnonymousCredential } from 'mongodb-stitch-react-native-sdk';
 
 const recipe_list = [
   {
@@ -82,8 +84,27 @@ export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      list:recipe_list
+      list:undefined,
+      client:undefined
     };
+  }
+
+  componentWillMount() {
+    console.log("shit");
+    Stitch.initializeDefaultAppClient('otterpop-liaol').then(client => {
+        this.setState({ client });
+    }).then(() => {
+        this.state.client.auth.loginWithCredential(new AnonymousCredential()).then(user => {
+            console.log(`Successfully logged in as user ${user.id}`);
+        }).catch(err => {
+            console.log(`Failed to log in anonymously: ${err}`);
+        }).then(() => {
+          this.state.client.callFunction("getRecipe").then(items => {          
+            console.log(items);
+            this.setState({list: items});
+        });
+      });
+    });
   }
 
   render() {
@@ -118,24 +139,28 @@ export default class HomeScreen extends React.Component {
             <Icon name="share" />
         </Fab>
         <Content>
-          <List>
-            {
-              list.map((l, i) => (
-                <ListItem thumbnail key={i} button={true} onPress={() => {this.props.navigation.navigate("RecipeView", {recipe : list[i]} );}}>
-                  <Left>
-                    <Thumbnail square source={{ uri: l.Photo }} />
-                  </Left>
-                  <Body>
-                    <Text>{l.Name}</Text>
-                    <Text note>{l.Description}</Text>
-                  </Body>
-                  <Right>
-                    <Text note>{l.Cook_Time} Min</Text>
-                  </Right>
-                </ListItem>
-              ))
-            }
-          </List>
+            {list == undefined ? (
+              <Loading></Loading>
+            ):(
+              <List>
+              {
+                list.map((l, i) => (
+                  <ListItem thumbnail key={i} button={true} onPress={() => {this.props.navigation.navigate("RecipeView", {recipe : list[i]} );}}>
+                    <Left>
+                      <Thumbnail square source={{ uri: l.Photo }} />
+                    </Left>
+                    <Body>
+                      <Text>{l.Name}</Text>
+                      <Text note>{l.Description}</Text>
+                    </Body>
+                    <Right>
+                      <Text note>{l.Cook_Time} Min</Text>
+                    </Right>
+                  </ListItem>
+                ))
+              }
+              </List>
+            )}
         </Content>
       </Container>
     );

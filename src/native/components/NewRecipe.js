@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import signup_style from '../styles/my_styles.js';
 import {Container, Header, Content, Form, Item, Input, Button, Label, Text, Left, Right, Body, Icon, Title, } from 'native-base';
 
+import { Stitch, AnonymousCredential } from 'mongodb-stitch-react-native-sdk';
+
 export default class NewRecipe extends React.Component {
   constructor() {
     super();
@@ -12,12 +14,31 @@ export default class NewRecipe extends React.Component {
       description: '',
       cook_time: '',
       ingredients: [{ name: '', amount: '' }],
-      steps: [{ instructions: '', ingredients: '', photo: '', duration: '' }]
+      steps: [{ instructions: '', ingredients: '', photo: '', duration: '' }],
+      client: undefined
     };
   }
 
-  handleNameChange = evt => {
-    this.setState({ name: evt.target.value });
+  /*
+  componentDidMount() {
+    if(this.state.client == undefined) {
+        Stitch.initializeDefaultAppClient('otterpop-liaol').then(client => {
+            this.setState({ client });
+        });
+    }
+  }
+  */
+
+  handleNameChange = val => {
+    this.setState({ name: val });
+  };
+
+  handleDescriptionChange = val => {
+    this.setState({ description: val });
+  };
+ 
+  handleIngredientsChange = val => {
+    this.setState({ name: val });
   };
 
   handleIngredientsNameChange = idx => evt => {
@@ -29,10 +50,20 @@ export default class NewRecipe extends React.Component {
     this.setState({ ingredients: newIngredients });
   };
 
+  /*
   handleSubmit = evt => {
-    const { navigation } = this.props;
-    const mystuff = navigation.getParam('list')
+
+    this.state.client.auth.loginWithCredential(new AnonymousCredential()).then(user => {
+        console.log(`Successfully logged in as user ${user.id}`);
+    }).catch(err => {
+        console.log(`Failed to log in anonymously: ${err}`);
+    });
+
+    this.state.client.callFunction("setRecipe", [this.state.name, this.state.photo, this.state.description, this.state.cook_time, this.state.ingredients, this.state.steps]).then(welcomeMessage => {
+        console.log(welcomeMessage);
+    });
   };
+  */
 
   handleAddIngredient = () => {
     this.setState({
@@ -89,16 +120,14 @@ export default class NewRecipe extends React.Component {
               <Input
                 placeholder="Recipe Name"
                 placeholderTextColor={'#d3d3d3'}
-                value={this.state.name}
-                onChange={this.handleNameChange}
+                onChangeText={this.handleNameChange}
               />
             </Item>
             <Item  style={{ marginTop:10,  marginLeft:10,  marginRight:10}} regular key={1}>
               <Input
                 placeholder="Description"
                 placeholderTextColor={'#d3d3d3'}
-                value={this.state.name}
-                onChange={this.handleNameChange}
+                onChange={this.handleDescriptionChange}
               />
             </Item>
             <Item  style={{ marginTop:10,  marginLeft:10,  marginRight:10, borderBottomWidth:0}} key={2}>
@@ -126,7 +155,6 @@ export default class NewRecipe extends React.Component {
                             style={{flex:3}}
                             placeholder={`Ingredient #${idx + 1} name`}
                             placeholderTextColor={'#d3d3d3'}
-                            value={ingredients.name}
                             onChange={this.handleIngredientsNameChange(idx)}
                         />
 
@@ -134,7 +162,6 @@ export default class NewRecipe extends React.Component {
                             style={{flex:1, borderLeftWidth: 1, borderLeftColor:"#e2e2e2"}}
                             placeholder={`Quantity`}
                             placeholderTextColor={'#d3d3d3'}
-                            value={ingredients.name}
                             onChange={this.handleIngredientsNameChange(idx)}
                         />
                     </Body>
@@ -161,7 +188,6 @@ export default class NewRecipe extends React.Component {
                             style={{flex:3}}
                             placeholder={`Step #${idx + 1} instructions`}
                             placeholderTextColor={'#d3d3d3'}
-                            value={steps.name}
                             onChange={this.handleIngredientsNameChange(idx)}
                         />
                     </Body>
@@ -178,7 +204,7 @@ export default class NewRecipe extends React.Component {
             ))}
 
 
-            <Button style={{ marginTop:30}}>
+            <Button style={{ marginTop:30}} onPress={this.handleSubmit}>
               <Text>Submit</Text>
             </Button>
           </Form>
