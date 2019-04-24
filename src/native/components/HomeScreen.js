@@ -5,81 +5,6 @@ import { Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text
 import Loading from './Loading';
 import { Stitch, AnonymousCredential } from 'mongodb-stitch-react-native-sdk';
 
-const recipe_list = [
-  {
-    Id: 1,
-    Photo: "https://barefeetinthekitchen.com/wp-content/uploads/2014/11/bulgogi-4-1024x683.jpg",
-    Name: "Beef Bulgogi",
-    Description: "Some super good korean marinated beef!",
-    Cook_Time: "50",
-    OwnerID: "userblahblahblah",
-    Last_Used: "20190410",
-    Ingredients: [{
-      Name: "Onion",
-      Quantity: {
-        Magnitude: "1",
-        Unit: "whole"
-      }
-    }, ],
-    Steps: [
-      {
-        step_text: "Chop that stuff up! chop that stuff up! chop that stuff up! chop that stuff up! chop that stuff up! ",
-        step_ingredients: [
-          "1 cup this",
-          "1 tablespoon that"
-        ],
-        Photo: "choppingitup.png", // optional
-        Duration: "10",
-      },
-      {
-        step_text: "Now cook it",
-        step_ingredients: [
-          "1 cup this",
-          "1 tablespoon that"
-        ],
-        Photo: "choppingitup.png", // optional
-        Duration: "10",
-      }
-    ]
-  },
-  {
-    Id: 2,
-    Photo: "http://yfimq2at25v1pt2cj1ozsc4k.wpengine.netdna-cdn.com/wp-content/uploads/2017/03/Mac-N-Cheese-with-Honey-Bacon-670x405-1489186002.jpg",
-    Name: "Mac n Cheese",
-    Description: "My awesome mac n cheese recipe",
-    Cook_Time: "20",
-    OwnerID: "userblahblahblah",
-    Last_Used: "20190410",
-    Ingredients: [{
-      Name: "Onion",
-      Quantity: {
-        Magnitude: "RealNumber",
-        Unit: "ounces"
-      }
-    }, ],
-    Steps: [
-      {
-        step_text: "Cook up the noodles",
-        step_ingredients: [
-          "1 cup this",
-          "1 tablespoon that"
-        ],
-        Photo: "choppingitup.png", // optional
-        Duration: "10",
-      },
-      {
-        step_text: "Mix some cheese in",
-        step_ingredients: [
-          "1 cup this",
-          "1 tablespoon that"
-        ],
-        Photo: "choppingitup.png", // optional
-        Duration: "10",
-      }
-    ]
-  }
-]
-
 export default class HomeScreen extends React.Component {
   constructor() {
     super();
@@ -89,22 +14,33 @@ export default class HomeScreen extends React.Component {
     };
   }
 
-  componentWillMount() {
-    console.log("shit");
-    Stitch.initializeDefaultAppClient('otterpop-liaol').then(client => {
-        this.setState({ client });
-    }).then(() => {
-        this.state.client.auth.loginWithCredential(new AnonymousCredential()).then(user => {
-            console.log(`Successfully logged in as user ${user.id}`);
-        }).catch(err => {
-            console.log(`Failed to log in anonymously: ${err}`);
-        }).then(() => {
-          this.state.client.callFunction("getRecipe").then(items => {          
-            console.log(items);
+  populateList = () => {
+      this.state.client.auth.loginWithCredential(new AnonymousCredential()).then(user => {
+          console.log(`Successfully logged in as user ${user.id}`);
+      }).catch(err => {
+          console.log(`Failed to log in anonymously: ${err}`);
+      }).then(() => {
+        this.state.client.callFunction("getRecipe").then(items => {  
+          if (this.state.list == undefined) {
             this.setState({list: items});
-        });
+          }
+          else if(this.state.list.length != items.length ) {
+            console.log("RELOOOOOOAAAAAAAAADDDDDD");
+            this.setState({list: items});
+          }
       });
     });
+  };
+
+  componentDidMount() {
+    if(Stitch.hasAppClient('otterpop-liaol')) {
+      this.setState({ client : Stitch.getAppClient('otterpop-liaol')}, this.populateList);
+    }
+    else {
+      Stitch.initializeDefaultAppClient('otterpop-liaol').then(client => {
+          this.setState({ client : client }, this.populateList);
+      });
+    }
   }
 
   render() {
@@ -115,7 +51,7 @@ export default class HomeScreen extends React.Component {
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
+              onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
               <Icon name="menu" />
             </Button>
           </Left>
@@ -125,7 +61,7 @@ export default class HomeScreen extends React.Component {
           <Right>
             <Button
               transparent
-              onPress={() => {this.props.navigation.navigate("AddRecipe");}}>
+              onPress={() => {this.props.navigation.navigate("AddRecipe", {client : this.state.client});}}>
               <Icon name="add" />
             </Button>
           </Right>
