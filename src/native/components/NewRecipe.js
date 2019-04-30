@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import signup_style from '../styles/my_styles.js';
-import {Container, Header, Content, Form, Item, Input, Button, Label, Text, Left, Right, Body, Icon, Title, } from 'native-base';
+import {Container, Header, Content, Form, Item, Input, Button, Label, Text, Left, Right, Body, Icon, Title, Card, CardItem } from 'native-base';
 
 import { Stitch, AnonymousCredential } from 'mongodb-stitch-react-native-sdk';
 
@@ -14,7 +14,7 @@ export default class NewRecipe extends React.Component {
       description: '',
       cook_time: '',
       ingredients: [{ Name: '', Quantity: {Magnitude: '', Unit: ''} }],
-      steps: [{ step_text: '', step_ingredients: '', Photo: '', Duration: '' }],
+      steps: [{ step_text: '', step_ingredients: [''], Photo: '', Duration: '' }],
       client: undefined
     };
   }
@@ -69,8 +69,14 @@ export default class NewRecipe extends React.Component {
 
   handleAddStep = () => {
     this.setState({
-        steps: [...this.state.steps, { instructions: '', ingredients: '', photo: '', duration: '' }],
+        steps: [...this.state.steps, { step_text: '', step_ingredients: [''], Photo: '', Duration: '' }],
     });
+  };
+
+  handleAddStepIngredient = idx => () => {
+    const newSteps = this.state.steps;
+    newSteps[idx].step_ingredients = [...newSteps[idx].step_ingredients, ''];
+    this.setState({ steps: newSteps });
   };
 
   handleRemoveIngredient = idx => () => {
@@ -85,6 +91,11 @@ export default class NewRecipe extends React.Component {
     });
   };
 
+  handleRemoveStepIngredient = (idx,idx2) => () => {
+    const newSteps = this.state.steps;
+    newSteps[idx].step_ingredients = newSteps[idx].step_ingredients.filter((s, sidx) => idx2 !== sidx),
+    this.setState({ steps: newSteps });
+  };
 
 
   render() {
@@ -178,30 +189,60 @@ export default class NewRecipe extends React.Component {
             ))}
 
             <Label style={{ paddingTop:10, paddingBottom:8}}>Steps</Label>
-            {this.state.steps.map((steps, idx) => (
-                <Item regular key={idx + 3 + this.state.ingredients.length} style={{ flex: 1, flexDirection:'row', marginTop:2,  marginLeft:10,  marginRight:10}} >
-                    <Left style={{flex:1}}>
-                        <Text style={{paddingLeft:10}}>{idx+1}</Text> 
-                    </Left>
-                    <Body  style={{flex:15, flexDirection:'row'}}>
+            {this.state.steps.map((step, idx) => (
+                <Card>
+                    <CardItem header style={{ flex: 1, flexDirection:'row'}}>
+                        <Body style={{flex:1}}>
+                            <Text style={{paddingLeft:10}}>{idx+1}</Text> 
+                        </Body>
+                        {idx+1 == this.state.steps.length ? (
+                            <Right  style={{flex:3, paddingRight:5}}>
+                                <Button transparent style={{height:"80%" }} onPress={this.handleAddStep}><Icon type="MaterialIcons" name="add"></Icon></Button>
+                            </Right>
+                        ) : (
+                            <Right  style={{flex:3, paddingRight:5}}>
+                                <Button transparent style={{height:"80%" }} onPress={this.handleRemoveStep(idx)}><Icon type="MaterialCommunityIcons" name="delete"></Icon></Button>
+                            </Right>
+                        )}
+                    </CardItem>
+                    <Item regular key={idx + 3 + this.state.ingredients.length} style={{ flex: 1, flexDirection:'row', marginTop:2,  marginLeft:10,  marginRight:10}} >
                         <Input
                             style={{flex:3}}
                             placeholder={`Step #${idx + 1} instructions`}
                             placeholderTextColor={'#d3d3d3'}
                             onChangeText={this.handleStepInstructionChange(idx)}
                         />
-                    </Body>
-                    {idx+1 == this.state.steps.length ? (
-                        <Right  style={{flex:3, paddingRight:5}}>
-                            <Button transparent style={{height:"80%" }} onPress={this.handleAddStep}><Icon type="MaterialIcons" name="add"></Icon></Button>
-                        </Right>
-                    ) : (
-                        <Right  style={{flex:3, paddingRight:5}}>
-                            <Button transparent style={{height:"80%" }} onPress={this.handleRemoveStep(idx)}><Icon type="MaterialCommunityIcons" name="delete"></Icon></Button>
-                        </Right>
-                    )}
-                </Item>
-            ))}
+                    </Item>
+                    {step.step_ingredients.map((step_ingredient, idx2) => (
+                        <Item regular key={idx2 + 3} style={{ flex: 1, flexDirection:'row', marginTop:2,  marginLeft:10,  marginRight:10}} >
+                            <Left style={{flex:1}}>
+                              <Text style={{paddingLeft:10}}>{idx2+1}</Text> 
+                            </Left>
+                            <Body  style={{flex:15, flexDirection:'row'}}>
+                                <Input
+                                    style={{flex:3}}
+                                    placeholder={`Step #${idx + 1} Ingredient #${idx2 + 1}`}
+                                    placeholderTextColor={'#d3d3d3'}
+                                    onChangeText={this.handleIngredientsNameChange(idx2)}
+                                />
+                                <Input
+                                    style={{flex:1, borderLeftWidth: 1, borderLeftColor:"#e2e2e2"}}
+                                    placeholder={`Quantity`}
+                                    placeholderTextColor={'#d3d3d3'}
+                                    onChangeText={this.handleIngredientsAmountChange(idx2)}
+                                />
+                            </Body>
+                            <Right style={{flex:3, paddingRight:5}}>
+                              {idx2+1 == step.step_ingredients.length ? (
+                                  <Button transparent style={{height:"80%" }} onPress={this.handleAddStepIngredient(idx)}><Icon type="MaterialIcons" name="add"></Icon></Button>
+                                ) : (
+                                  <Button transparent style={{height:"80%" }} onPress={this.handleRemoveStepIngredient(idx, idx2)}><Icon type="MaterialCommunityIcons" name="delete"></Icon></Button>
+                              )}
+                            </Right>
+                        </Item>
+                    ), this)}
+                </Card>
+            ), this)}
 
 
             <Button style={{ marginTop:30}} onPress={this.handleSubmit(client)}>

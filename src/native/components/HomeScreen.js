@@ -51,7 +51,7 @@ export default class HomeScreen extends React.Component {
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())}>
+              onPress={() => this.props.navigation.toggleDrawer()}>
               <Icon name="menu" />
             </Button>
           </Left>

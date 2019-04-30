@@ -5,11 +5,8 @@ import Expo from "expo";
 import { Font } from 'expo';
 import Loading from './components/Loading';
 import HomeScreen from "./components/HomeScreen.js";
-import { RootSwitchNav } from "./router.js";
-import {
-  createStackNavigator,
-  createAppContainer
-} from 'react-navigation';
+import { RootStackNav, RootSwitchNav } from "./router.js";
+import { createAppContainer } from 'react-navigation';
 
 StatusBar.setHidden(true);
 

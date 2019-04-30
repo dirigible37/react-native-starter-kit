@@ -1,9 +1,13 @@
 import React from "react";
-import { StatusBar, Image } from "react-native";
+import { StatusBar, Image, View } from "react-native";
 import { DrawerActions } from 'react-navigation-drawer';
-import { Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, List, ListItem, Fab, Thumbnail} from "native-base";
+import { Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, List, ListItem, Fab, Thumbnail, Footer} from "native-base";
 
 export default class HomeScreen extends React.Component {
+
+  poop = () => {
+    console.log("WOWWWWW");
+  };
 
   render() {
     const { navigation } = this.props;
@@ -29,14 +33,6 @@ export default class HomeScreen extends React.Component {
             </Button>
           </Right>
         </Header>
-        <Fab
-            active="true"
-            direction="up"
-            containerStyle={{ }}
-            style={{ backgroundColor: '#5067FF' }}
-            position="bottomRight">
-            <Icon type="FontAwesome" name="fire" />
-        </Fab>
         <Content>
           <Card>
             <CardItem cardBody>
@@ -96,6 +92,12 @@ export default class HomeScreen extends React.Component {
             }
           </Card>
         </Content>
+        <Fab
+            style={{ backgroundColor: '#5067FF' }}
+            position="bottomRight"
+            onPress={() => this.poop()}>
+            <Icon type="FontAwesome" name="fire" />
+        </Fab>
       </Container>
     );
   }
