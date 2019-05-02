@@ -1,10 +1,11 @@
 import React from "react";
 import { AppRegistry, Image, StatusBar } from "react-native";
 import { Container, Content, Text, List, ListItem } from "native-base";
-
+import Amplify, {Auth, Hub} from 'aws-amplify';
 const routes = ["Logout"];
 
 export default class SideBar extends React.Component {
+
   render() {
     return (
       <Container>
@@ -12,7 +13,7 @@ export default class SideBar extends React.Component {
           <List>
             <ListItem
                 button
-                onPress={() => this.props.navigation.navigate("SignedOut")}>
+                onPress={this.props.signOut}>
                 <Text>Logout</Text>
             </ListItem>
           </List>

@@ -5,12 +5,18 @@ import Expo from "expo";
 import { Font } from 'expo';
 import Loading from './components/Loading';
 import HomeScreen from "./components/HomeScreen.js";
-import { RootStackNav, RootSwitchNav } from "./router.js";
+import { RootStackNav, RootSwitchNav, DrawerNav } from "./router.js";
 import { createAppContainer } from 'react-navigation';
+
+import { withAuthenticator } from 'aws-amplify-react-native'
+import Amplify from '@aws-amplify/core'
+import config from '../aws-exports'
+Amplify.configure(config)
+import {Auth, Hub} from 'aws-amplify';
 
 StatusBar.setHidden(true);
 
-export default class AwesomeApp extends Component {
+class AwesomeApp extends Component {
   constructor() {
     super();
     this.state = {
@@ -27,12 +33,26 @@ export default class AwesomeApp extends Component {
     this.setState({ isReady: true });
   }
 
+  signOut = async () => {
+    await Auth.signOut().then(() => {
+      this.props.onStateChange('signedOut', null);
+      })
+      .catch(err => {
+      console.log('err: ', err)
+      })
+  }
+
   render() {
     if (!this.state.isReady) {
       return <Loading />;
     }
 
-    const Layout = createAppContainer(RootSwitchNav);
-    return <Layout />;
+    const Layout = createAppContainer(DrawerNav);
+    return <Layout signOut={this.signOut}/>;
   }
+}
+
+export default props => {
+  const AppComponent = withAuthenticator(AwesomeApp, { includeGreetings: true });
+  return <AppComponent {...props} />
 }

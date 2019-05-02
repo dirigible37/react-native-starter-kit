@@ -1,0 +1,19 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "recipesetto-20190430112545-authRole",
+            "UnauthRoleArn": "arn:aws:iam::641479799572:role/recipesetto-20190430112545-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::641479799572:role/recipesetto-20190430112545-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "recipesetto-20190430112545-deployment",
+            "UnauthRoleName": "recipesetto-20190430112545-unauthRole",
+            "StackName": "recipesetto-20190430112545",
+            "StackId": "arn:aws:cloudformation:us-east-1:641479799572:stack/recipesetto-20190430112545/3a6d5dc0-6b5c-11e9-8c17-1235152b041e"
+        },
+        "categories": {
+            "auth": {
+                "cognito9866d37c": {}
+            }
+        }
+    }
+}

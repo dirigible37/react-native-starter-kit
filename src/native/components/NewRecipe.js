@@ -1,20 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import signup_style from '../styles/my_styles.js';
+import { Constants, ImagePicker, Permissions, FileSystem } from 'expo';
 import {Container, Header, Content, Form, Item, Input, Button, Label, Text, Left, Right, Body, Icon, Title, Card, CardItem } from 'native-base';
-
+import mime from 'mime-types';
 import { Stitch, AnonymousCredential } from 'mongodb-stitch-react-native-sdk';
+import Storage from '@aws-amplify/storage'
 
 export default class NewRecipe extends React.Component {
   constructor() {
     super();
     this.state = {
       name: '',
-      photo: '',
+      photo: null,
       description: '',
       cook_time: '',
-      ingredients: [{ Name: '', Quantity: {Magnitude: '', Unit: ''} }],
-      steps: [{ step_text: '', step_ingredients: [''], Photo: '', Duration: '' }],
+      ingredients: [{ Name: '', Quantity: '' }],
+      steps: [{ step_text: '', step_ingredients: [{ Name: '', Quantity: '' }], Photo: '', Duration: '' }],
       client: undefined
     };
   }
@@ -45,8 +47,20 @@ export default class NewRecipe extends React.Component {
 
   handleIngredientsAmountChange = idx => val => {
     const newIngredients = this.state.ingredients;
-    newIngredients[idx].Quantity = {Magnitude: val, Unit: 'cup'};
+    newIngredients[idx].Quantity = val;
     this.setState({ ingredients: newIngredients });
+  };
+
+  handleStepIngredientsNameChange = (idx,idx2) => val => {
+    const newStepIngredients = this.state.steps;
+    newStepIngredients[idx].step_ingredients[idx2].Name = val;
+    this.setState({ steps: newStepIngredients });
+  };
+
+  handleStepIngredientsAmountChange = (idx,idx2) => val => {
+    const newStepIngredients = this.state.steps;
+    newStepIngredients[idx].step_ingredients[idx2].Quantity = val;
+    this.setState({ steps: newStepIngredients });
   };
 
   handleSubmit = client => evt => {
@@ -69,13 +83,13 @@ export default class NewRecipe extends React.Component {
 
   handleAddStep = () => {
     this.setState({
-        steps: [...this.state.steps, { step_text: '', step_ingredients: [''], Photo: '', Duration: '' }],
+        steps: [...this.state.steps, { step_text: '', step_ingredients: [{ Name: '', Quantity: '' }], Photo: '', Duration: '' }],
     });
   };
 
   handleAddStepIngredient = idx => () => {
     const newSteps = this.state.steps;
-    newSteps[idx].step_ingredients = [...newSteps[idx].step_ingredients, ''];
+    newSteps[idx].step_ingredients = [...newSteps[idx].step_ingredients, { Name: '', Quantity: '' }];
     this.setState({ steps: newSteps });
   };
 
@@ -96,7 +110,48 @@ export default class NewRecipe extends React.Component {
     newSteps[idx].step_ingredients = newSteps[idx].step_ingredients.filter((s, sidx) => idx2 !== sidx),
     this.setState({ steps: newSteps });
   };
+/* 
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
 
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ photo: result.uri });
+      this._handleImagePicked(result);
+    }
+  };
+*/
+  _pickImage = async () => {
+    const {
+      status: cameraRollPerm
+    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (cameraRollPerm === 'granted') {
+      let pickerResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+      });
+      console.log(pickerResult);
+      this._handleImagePicked(pickerResult);
+    }
+  };
+
+  // this handles the image upload to S3
+  _handleImagePicked = async (pickerResult) => {
+    const imageName = "testing.png";
+    const fileType = mime.lookup(pickerResult.uri);
+    const access = { level: "public", contentType: fileType };
+    const imageData = await FileSystem.readAsStringAsync(pickerResult.uri, { encoding: FileSystem.EncodingTypes.Base64, });
+    console.log("yeet?");
+    try {
+      await Storage.put(imageName, imageData, access)
+    } catch (err) {
+      console.log('error: ', err)
+    }
+  }
 
   render() {
     const { navigation } = this.props;
@@ -141,6 +196,11 @@ export default class NewRecipe extends React.Component {
                 onChangeText={this.handleDescriptionChange}
               />
             </Item>
+            {/*
+            <Item>
+              <Button onPress={this._pickImage}><Text>YEEEET</Text></Button>
+            </Item>
+            */}
             <Item  style={{ marginTop:10,  marginLeft:10,  marginRight:10, borderBottomWidth:0}} key={2}>
                 <Input
                     style={{marginRight:20, borderColor:"#e2e2e2", borderWidth:1}}
@@ -191,7 +251,7 @@ export default class NewRecipe extends React.Component {
             <Label style={{ paddingTop:10, paddingBottom:8}}>Steps</Label>
             {this.state.steps.map((step, idx) => (
                 <Card>
-                    <CardItem header style={{ flex: 1, flexDirection:'row'}}>
+                    <CardItem key={idxheader style={{ flex: 1, flexDirection:'row'}}>
                         <Body style={{flex:1}}>
                             <Text style={{paddingLeft:10}}>{idx+1}</Text> 
                         </Body>
@@ -223,13 +283,13 @@ export default class NewRecipe extends React.Component {
                                     style={{flex:3}}
                                     placeholder={`Step #${idx + 1} Ingredient #${idx2 + 1}`}
                                     placeholderTextColor={'#d3d3d3'}
-                                    onChangeText={this.handleIngredientsNameChange(idx2)}
+                                    onChangeText={this.handleStepIngredientsNameChange(idx, idx2)}
                                 />
                                 <Input
                                     style={{flex:1, borderLeftWidth: 1, borderLeftColor:"#e2e2e2"}}
                                     placeholder={`Quantity`}
                                     placeholderTextColor={'#d3d3d3'}
-                                    onChangeText={this.handleIngredientsAmountChange(idx2)}
+                                    onChangeText={this.handleStepIngredientsAmountChange(idx, idx2)}
                                 />
                             </Body>
                             <Right style={{flex:3, paddingRight:5}}>

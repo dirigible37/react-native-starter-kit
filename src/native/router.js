@@ -40,16 +40,3 @@ export const DrawerNav = createDrawerNavigator(
     contentComponent: props => <SideBar {...props} />
   }
 );
-
-export const RootSwitchNav = createSwitchNavigator(
-  {
-      Drawer: DrawerNav,
-      SignedOut: {
-          screen: SignUp
-      }
-  },
-  {
-      initialRouteName: "SignedOut",
-      backBehavior : "none"
-  }
-);

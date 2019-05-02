@@ -1,0 +1,14 @@
+{
+	"auth": {
+		"cognito9866d37c": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation"
+		}
+	},
+	"storage": {
+		"recipesotterpop": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}

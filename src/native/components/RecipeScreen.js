@@ -57,7 +57,7 @@ export default class HomeScreen extends React.Component {
               renderRow={ (data) =>
                 <ListItem key={data.rowID} > 
                   <Left>
-                    <Text>{data.Quantity.Magnitude} {data.Quantity.Unit}</Text>
+                    <Text>{data.Quantity}</Text>
                   </Left>
                   <Right>
                     <Text>{data.Name}</Text>
@@ -67,26 +67,28 @@ export default class HomeScreen extends React.Component {
               </List>
             </CardItem>
             <CardItem header bordered>
-              <Text>Steps</Text>
+              <Text style={{ }}>Steps</Text>
             </CardItem>
             {
               recipe.Steps.map((l, i) => (
-                <CardItem bordered key={i}>
-                  <Left style={{flex:1}}>
-                    <Text>{i}</Text>
-                  </Left>
-                  <Body style={{flex:6}}>
-                    <Text>{l.step_text}</Text>
-                  </Body>
-                  <Right style={{flex:3}}>
-                    <List dataArray={l.step_ingredients}
-                      renderRow={ (data) =>
-                          <ListItem key={data.rowID}> 
-                            <Text note>{data}</Text>
-                          </ListItem>
-                      }> 
-                    </List>            
-                  </Right>
+                <CardItem bordered key={i} style={{ paddingLeft:0, paddingRight:5}} >
+                  <List>
+                    <ListItem itemHeader style={{ paddingBottom:0, marginBottom:0}} >
+                      <Text style={{ paddingBottom:0, marginBottom:0 }}>Step {i}</Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text>{l.step_text}</Text>
+                    </ListItem>
+                    <ListItem style={{ borderBottomWidth:0 }}>
+                      <List dataArray={l.step_ingredients}
+                        renderRow={ (data) =>
+                            <ListItem key={data.rowID}> 
+                              <Text note>{data.Quantity} {data.Name}</Text>
+                            </ListItem>
+                        }> 
+                      </List>  
+                    </ListItem>
+                  </List> 
                 </CardItem>
               ))
             }
